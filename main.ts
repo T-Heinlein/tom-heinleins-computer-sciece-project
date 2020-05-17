@@ -1,27 +1,91 @@
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    Dodgeball = sprites.create(img`
+namespace SpriteKind {
+    export const Target = SpriteKind.create()
+    export const Bullet = SpriteKind.create()
+}
+function create_player () {
+    mySprite = sprites.create(img`
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . f f f f f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f f f f f . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . f f f f f f f . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . f . f . . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . f . . . . . f . . . . . . 
+. . . . . . f . . . . . . . f . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+`, SpriteKind.Player)
+    mySprite.setPosition(14, 61)
+    controller.moveSprite(mySprite, 0, 100)
+    mySprite.setFlag(SpriteFlag.StayInScreen, true)
+    mySprite2 = sprites.create(img`
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . 5 5 5 5 5 . . . . . . . . 
+. . . . . . . 5 . . . 5 . . . . . . . . 
+. . . . . . . 5 . . . 5 . . . . . . . . 
+. . . . . . . 5 . . . 5 . . . . . . . . 
+. . . . . . . 5 5 5 5 5 . . . . . . . . 
+. . . . . . . . . 5 . . . . . . . . . . 
+. . . . . . . . . 5 . . . . . . . . . . 
+. . . . . . 5 5 5 5 5 5 5 . . . . . . . 
+. . . . . . . . . 5 . . . . . . . . . . 
+. . . . . . . . . 5 . . . . . . . . . . 
+. . . . . . . . . 5 . . . . . . . . . . 
+. . . . . . . . 5 . 5 . . . . . . . . . 
+. . . . . . . 5 . . . 5 . . . . . . . . 
+. . . . . . 5 . . . . . 5 . . . . . . . 
+. . . . . 5 . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+`, SpriteKind.Target)
+    mySprite2.setPosition(121, 60)
+    controller.player2.moveSprite(mySprite, 0, 100)
+    mySprite2.setFlag(SpriteFlag.StayInScreen, true)
+}
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    projectile = sprites.createProjectileFromSprite(img`
 . . . . . . . . . . . . . . . . 
-. . . . . . 6 6 6 6 . . . . . . 
-. . . . 6 6 6 5 5 6 6 6 . . . . 
-. . . 7 7 7 7 6 6 6 6 6 6 . . . 
-. . 6 7 7 7 7 8 8 8 1 1 6 6 . . 
-. . 7 7 7 7 7 8 8 8 1 1 5 6 . . 
-. 6 7 7 7 7 8 8 8 8 8 5 5 6 6 . 
-. 6 7 7 7 8 8 8 6 6 6 6 5 6 6 . 
-. 6 6 7 7 8 8 6 6 6 6 6 6 6 6 . 
-. 6 8 7 7 8 8 6 6 6 6 6 6 6 6 . 
-. . 6 8 7 7 8 6 6 6 6 6 8 6 . . 
-. . 6 8 8 7 8 8 6 6 6 8 6 6 . . 
-. . . 6 8 8 8 8 8 8 8 8 6 . . . 
-. . . . 6 6 8 8 8 8 6 6 . . . . 
-. . . . . . 6 6 6 6 . . . . . . 
 . . . . . . . . . . . . . . . . 
-`, SpriteKind.Projectile)
+. . . . . . . . . . . . . . . . 
+. . . . . . 7 7 7 . . . . . . . 
+. . . . . 7 7 7 7 7 . . . . . . 
+. . . . 7 7 7 7 7 7 7 . . . . . 
+. . . 7 7 7 7 7 7 7 7 7 . . . . 
+. . . 7 7 7 7 7 7 7 7 7 . . . . 
+. . . . 7 7 7 7 7 7 7 . . . . . 
+. . . . . 7 7 7 7 7 . . . . . . 
+. . . . . . 7 7 7 . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, mySprite, 200, 0)
+    projectile.setFlag(SpriteFlag.DestroyOnWall, true)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Target, function (sprite, otherSprite) {
     info.changeScoreBy(1)
+    sprite.destroy()
 })
-let Dodgeball: Sprite = null
+info.onLifeZero(function () {
+    game.over(false)
+    music.siren.play()
+})
+let projectile: Sprite = null
+let mySprite2: Sprite = null
+let mySprite: Sprite = null
 scene.setBackgroundImage(img`
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 1 1 1 1 1 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
@@ -145,58 +209,4 @@ scene.setBackgroundImage(img`
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 1 1 1 1 1 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
 `)
 info.setLife(5)
-info.setScore(0)
-let mySprite = sprites.create(img`
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . f f f f f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f f f f f . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . f f f f f f f . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . f . f . . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . f . . . . . f . . . . . . 
-. . . . . . f . . . . . . . f . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-`, SpriteKind.Player)
-mySprite.setPosition(14, 61)
-controller.moveSprite(mySprite, 100, 100)
-mySprite.setFlag(SpriteFlag.StayInScreen, true)
-let mySprite2 = sprites.create(img`
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . f f f f . . . . . . . . . . 
-. . . . . . . . f f 1 1 1 1 f f . . . . . . . . 
-. . . . . . . f b 1 1 1 1 1 1 b f . . . . . . . 
-. . . . . . . f 1 1 1 1 1 1 1 1 f . . . . . . . 
-. . . . . . f d 1 1 1 1 1 1 1 1 d f . . . . . . 
-. . . . . . f d 1 1 1 1 1 1 1 1 d f . . . . . . 
-. . . . . . f d d d 1 1 1 1 d d d f . . . . . . 
-. . . . . . f b d b f d d f b d b f . . . . . . 
-. . . . . . f c d c f 1 1 f c d c f . . . . . . 
-. . . . . . . f b 1 1 1 1 1 1 b f . . . . . . . 
-. . . . . . f f f c d b 1 b d f f f f . . . . . 
-. . . . f c 1 1 1 c b f b f c 1 1 1 c f . . . . 
-. . . . f 1 b 1 b 1 f f f f 1 b 1 b 1 f . . . . 
-. . . . f b f b f f f f f f b f b f b f . . . . 
-. . . . . . . . . f f f f f f . . . . . . . . . 
-. . . . . . . . . . . f f f . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . . . . . 
-`, SpriteKind.Enemy)
-game.onUpdateInterval(200, function () {
-	
-})
+create_player()
