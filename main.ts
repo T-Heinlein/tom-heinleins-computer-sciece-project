@@ -1,33 +1,11 @@
 namespace SpriteKind {
     export const Target = SpriteKind.create()
     export const Bullet = SpriteKind.create()
+    export const Ball = SpriteKind.create()
+    export const Aim = SpriteKind.create()
 }
-function create_player () {
-    mySprite = sprites.create(img`
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . f f f f f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . . f f f f f . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . f f f f f f f . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . . f . . . . . . . . . 
-. . . . . . . . . f . f . . . . . . . . 
-. . . . . . . . f . . . f . . . . . . . 
-. . . . . . . f . . . . . f . . . . . . 
-. . . . . . f . . . . . . . f . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . . . . . 
-`, SpriteKind.Player)
-    mySprite.setPosition(14, 61)
-    controller.moveSprite(mySprite, 0, 100)
-    mySprite.setFlag(SpriteFlag.StayInScreen, true)
+function create_opposition () {
+    info.setLife(3)
     mySprite2 = sprites.create(img`
 . . . . . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . . . . . 
@@ -51,10 +29,77 @@ function create_player () {
 . . . . . . . . . . . . . . . . . . . . 
 `, SpriteKind.Target)
     mySprite2.setPosition(121, 60)
-    controller.player2.moveSprite(mySprite, 0, 100)
+    controller.player2.moveSprite(mySprite2, 0, 100)
     mySprite2.setFlag(SpriteFlag.StayInScreen, true)
 }
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+sprites.onOverlap(SpriteKind.Ball, SpriteKind.Target, function (sprite, otherSprite) {
+    sprite.destroy()
+    info.player2.changeLifeBy(-1)
+})
+info.player2.onLifeZero(function () {
+    game.over(false)
+})
+sprites.onOverlap(SpriteKind.Bullet, SpriteKind.Aim, function (sprite, otherSprite) {
+    sprite.destroy()
+    info.player1.changeLifeBy(-1)
+})
+controller.player2.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pressed, function () {
+    projectile2 = sprites.createProjectileFromSprite(img`
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . f f f f 4 . . . . . . . . 
+. . . f f f f f f f f 5 4 4 . . . . . . 
+. . f f f f f f f f f 2 5 5 4 . . . . . 
+. . f f f f f f f f f 2 5 5 4 . . . . . 
+. . . f f f f f f f f 5 4 4 . . . . . . 
+. . . . . . . f f f f 4 . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+`, mySprite2, -200, 0)
+    projectile2.setFlag(SpriteFlag.DestroyOnWall, true)
+})
+function create_player () {
+    info.setLife(3)
+    mySprite = sprites.create(img`
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . f f f f f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . . f f f f f . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . f f f f f f f . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . . f . . . . . . . . . 
+. . . . . . . . . f . f . . . . . . . . 
+. . . . . . . . f . . . f . . . . . . . 
+. . . . . . . f . . . . . f . . . . . . 
+. . . . . . f . . . . . . . f . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . . . . . 
+`, SpriteKind.Aim)
+    mySprite.setPosition(14, 60)
+    controller.moveSprite(mySprite, 0, 100)
+    mySprite.setFlag(SpriteFlag.StayInScreen, true)
+}
+info.onLifeZero(function () {
+    game.over(false)
+})
+controller.player1.onButtonEvent(ControllerButton.Left, ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
 . . . . . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
@@ -75,17 +120,12 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 `, mySprite, 200, 0)
     projectile.setFlag(SpriteFlag.DestroyOnWall, true)
 })
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Target, function (sprite, otherSprite) {
-    info.changeScoreBy(1)
-    sprite.destroy()
-})
-info.onLifeZero(function () {
-    game.over(false)
-    music.siren.play()
-})
 let projectile: Sprite = null
-let mySprite2: Sprite = null
 let mySprite: Sprite = null
+let projectile2: Sprite = null
+let mySprite2: Sprite = null
+create_player()
+create_opposition()
 scene.setBackgroundImage(img`
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 1 1 1 1 1 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
@@ -208,5 +248,3 @@ scene.setBackgroundImage(img`
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 1 1 1 1 1 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 1 1 1 1 1 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 
 `)
-info.setLife(5)
-create_player()
